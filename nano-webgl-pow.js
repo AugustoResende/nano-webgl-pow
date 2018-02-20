@@ -32,8 +32,8 @@ function hex_array(hex, proto) {
 function calculate(hashHex, callback, progressCallback) {
   const canvas = document.createElement('canvas');
   // 2 bytes of variance on 8 byte random work value per frame
-  canvas.width = 1024;
-  canvas.height = 1024;
+  canvas.width = 2048;
+  canvas.height = 2048;
 
   const gl = canvas.getContext('webgl2');
   if (!gl) {
@@ -189,8 +189,8 @@ function calculate(hashHex, callback, progressCallback) {
 
     void main() {
       int i;
-      uint uv_x = uint(uv_pos.x*1023.);
-      uint uv_y = uint(uv_pos.y*1023.);
+      uint uv_x = uint(uv_pos.x*2047.);
+      uint uv_y = uint(uv_pos.y*2047.);
       // blake2bUpdate, manually
       m[0] = uvec4_uint(u_work0, uv_x, uv_y);
       m[1] = uvec4_uint(u_work1);
@@ -254,10 +254,10 @@ function calculate(hashHex, callback, progressCallback) {
       // Threshold test
       if(digest[4] > 0xC0u && digest[5] == 0xFFu && digest[6] == 0xFFu && digest[7] == 0xFFu) {
         fragColor = vec4(
-          float(digest[4])/1023., // Not used, just needs to be >0, nice for debugging
-          float(digest[5])/1023., // Same as previous
-          float(uv_x)/1023., // Return the 2 custom bytes used in work value
-          float(uv_y)/1023. // Second custom byte
+          float(digest[4])/2047., // Not used, just needs to be >0, nice for debugging
+          float(digest[5])/2047., // Same as previous
+          float(uv_x)/2047., // Return the 2 custom bytes used in work value
+          float(uv_y)/2047. // Second custom byte
         );
       }
     }`;
