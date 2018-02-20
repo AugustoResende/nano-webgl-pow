@@ -32,8 +32,8 @@ function hex_array(hex, proto) {
 function calculate(hashHex, callback, progressCallback) {
   const canvas = document.createElement('canvas');
   // 2 bytes of variance on 8 byte random work value per frame
-  canvas.width = 256;
-  canvas.height = 256;
+  canvas.width = 512;
+  canvas.height = 512;
 
   const gl = canvas.getContext('webgl2');
   if (!gl) {
@@ -189,8 +189,8 @@ function calculate(hashHex, callback, progressCallback) {
 
     void main() {
       int i;
-      uint uv_x = uint(uv_pos.x*255.);
-      uint uv_y = uint(uv_pos.y*255.);
+      uint uv_x = uint(uv_pos.x*511.);
+      uint uv_y = uint(uv_pos.y*511.);
       // blake2bUpdate, manually
       m[0] = uvec4_uint(u_work0, uv_x, uv_y);
       m[1] = uvec4_uint(u_work1);
@@ -230,7 +230,7 @@ function calculate(hashHex, callback, progressCallback) {
       v[29] = ~v[29];
 
       // twelve rounds of mixing
-      for(i=0;i<12;i++) {
+      for(i=0;i<12;i++){
         B2B_G(0, 8, 16, 24, SIGMA82[i * 16 + 0], SIGMA82[i * 16 + 1]);
         B2B_G(2, 10, 18, 26, SIGMA82[i * 16 + 2], SIGMA82[i * 16 + 3]);
         B2B_G(4, 12, 20, 28, SIGMA82[i * 16 + 4], SIGMA82[i * 16 + 5]);
@@ -254,10 +254,10 @@ function calculate(hashHex, callback, progressCallback) {
       // Threshold test
       if(digest[4] > 0xC0u && digest[5] == 0xFFu && digest[6] == 0xFFu && digest[7] == 0xFFu) {
         fragColor = vec4(
-          float(digest[4])/255., // Not used, just needs to be >0, nice for debugging
-          float(digest[5])/255., // Same as previous
-          float(uv_x)/255., // Return the 2 custom bytes used in work value
-          float(uv_y)/255. // Second custom byte
+          float(digest[4])/511., // Not used, just needs to be >0, nice for debugging
+          float(digest[5])/511., // Same as previous
+          float(uv_x)/511., // Return the 2 custom bytes used in work value
+          float(uv_y)/511. // Second custom byte
         );
       }
     }`;
